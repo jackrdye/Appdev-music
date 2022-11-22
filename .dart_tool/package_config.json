@@ -176,6 +176,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "google_nav_bar",
+      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/google_nav_bar-5.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "http",
       "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.5",
       "packageUri": "lib/",
@@ -428,7 +434,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-11-17T16:50:37.577677Z",
+  "generated": "2022-11-22T14:23:38.146815Z",
   "generator": "pub",
   "generatorVersion": "2.18.4"
 }
