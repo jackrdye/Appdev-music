@@ -5,7 +5,7 @@ import 'package:music_app/home_page.dart';
 import 'package:music_app/main_page.dart';
 
 class App extends StatefulWidget {
-  const App({super.key});
+  const App({super.key}); 
 
   @override
   State<App> createState() => _AppState();
