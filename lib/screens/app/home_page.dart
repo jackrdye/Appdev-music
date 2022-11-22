@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:music_app/screens/auth/check_auth.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User user;
+  final VoidCallback signOut;
+
+  const HomePage({super.key, required this.user, required this.signOut}
+  );
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final user = FirebaseAuth.instance.currentUser!;
-
-  Future signOut() async {
-    await FirebaseAuth.instance.signOut();
-    }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("You're logged in as: ${user.email!}"),
+            Text("You're logged in as: ${widget.user.email!}"),
 
             InkWell(
                   child: Padding(
@@ -42,7 +41,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   onTap: ()  {
-                    signOut();
+                    widget.signOut();
                     Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const CheckAuth()),

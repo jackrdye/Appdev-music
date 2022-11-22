@@ -30,7 +30,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     _pages = [
-      HomePage(),
+      HomePage(user: user, signOut: signOut),
       LibraryPage(),
       FriendsPage()
   ];
