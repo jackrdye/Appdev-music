@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:music_app/main_page.dart';
+import 'package:music_app/screens/auth/check_auth.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("You're logged in as: " + user.email!),
+            Text("You're logged in as: ${user.email!}"),
 
             InkWell(
                   child: Padding(
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
                     signOut();
                     Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const MainPage()),
+                          MaterialPageRoute(builder: (context) => const CheckAuth()),
                         );
                   },
                 ),
