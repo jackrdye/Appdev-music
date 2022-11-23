@@ -18,8 +18,10 @@ class Playlist {
 }
 
 class Friend {
+  String id;
+  String name;
   
-
+  Friend({required this.id, required this.name});
 }
 
 class Song {
@@ -36,11 +38,11 @@ class Profile {
   String id;
   String username;
   String musicService;
-  List<Friend> friends;
-  List<Playlist> playlists;
+  List<String> friendIds;
+  List<String> playlistIds;
   List sharedWithMe;
 
-  Profile({required this.id, required this.username, required this.musicService, required this.friends, required this.playlists, required this.sharedWithMe});
+  Profile({required this.id, required this.username, required this.musicService, required this.friendIds, required this.playlistIds, required this.sharedWithMe});
 }
 
 
@@ -53,10 +55,25 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  // State
   final user = FirebaseAuth.instance.currentUser!;
- 
   int _selectedIndex = 0;
 
+  late List<Widget> _pages = [];
+  @override
+  void initState() {
+    List<Playlist> playlists = [];
+    List<Friend> friends = [];
+    // Profile profile = Profile(id: user.uid, username: user.email!, musicService: "appleMusic", );
+
+    _pages = [
+      HomePage(user: user, signOut: signOut),
+      LibraryPage(),
+      FriendsPage()
+  ];
+  }
+
+  // Methods
   void _navigateBottomBar(index) {
     setState(() {
       _selectedIndex = index;
@@ -66,16 +83,6 @@ class _AppState extends State<App> {
   Future signOut() async {
     await FirebaseAuth.instance.signOut();
     }
-
-  late List<Widget> _pages = [];
-  @override
-  void initState() {
-    _pages = [
-      HomePage(user: user, signOut: signOut),
-      LibraryPage(),
-      FriendsPage()
-  ];
-  }
   
 
   @override
