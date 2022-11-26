@@ -26,6 +26,10 @@ clock
 2.12
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/clock-1.1.1/
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/clock-1.1.1/lib/
+cloud_firestore
+2.16
+file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-4.1.0/
+file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-4.1.0/lib/
 cloud_firestore_platform_interface
 2.16
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_platform_interface-5.9.0/

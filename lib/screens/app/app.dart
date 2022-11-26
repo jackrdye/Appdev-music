@@ -1,51 +1,14 @@
 import 'dart:core';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:music_app/screens/app/friends_page.dart';
 import 'package:music_app/screens/app/home_page.dart';
 import 'package:music_app/screens/app/library_page.dart';
-
-class Playlist {
-  String id;
-  String name;
-  String ownerId;
-  List<Song> songs;
-  List<Profile> collaborators;
-
-  Playlist({required this.id, required this.name, required this.ownerId, required this.songs, required this.collaborators});
-}
-
-class Friend {
-  String id;
-  String name;
-  
-  Friend({required this.id, required this.name});
-}
-
-class Song {
-  String id;
-  String name;
-  String spotifyLink;
-  String appleMusicLink;
-  String youtubeMusicLink;
-
-  Song({required this.id, required this.name, this.spotifyLink="", this.appleMusicLink="", this.youtubeMusicLink=""});
-}
-
-class Profile {
-  String id;
-  String username;
-  String musicService;
-  List<String> friendIds;
-  List<String> playlistIds;
-  List sharedWithMe;
-
-  Profile({required this.id, required this.username, required this.musicService, required this.friendIds, required this.playlistIds, required this.sharedWithMe});
-}
-
-
+import 'package:music_app/widgets/playlists/playlistList.dart';
+import '../../models.dart'; // Import Playlist, Friend, Song, Profile
 
 class App extends StatefulWidget {
   const App({super.key}); 
@@ -54,22 +17,37 @@ class App extends StatefulWidget {
   State<App> createState() => _AppState();
 }
 
+
 class _AppState extends State<App> {
   // State
-  final user = FirebaseAuth.instance.currentUser!;
+  final userAuth = FirebaseAuth.instance.currentUser!;
   int _selectedIndex = 0;
 
-  late List<Widget> _pages = [];
+  late List<Widget> _bottomNavPages = [];
+  late DocumentReference profilee;
+  late Profile profile;
+  late List<Song> songs;
+  late List<Playlist> playlists;
   @override
   void initState() {
-    List<Playlist> playlists = [];
-    List<Friend> friends = [];
-    // Profile profile = Profile(id: user.uid, username: user.email!, musicService: "appleMusic", );
+    // StreamBuilder<DocumentSnapshot> user = FirebaseFirestore.instance.collection('Users').doc(userAuth.uid).snapshots();
 
-    _pages = [
-      HomePage(user: user, signOut: signOut),
-      LibraryPage(),
-      FriendsPage()
+    songs = [Song(id: "songid1", name: "songname1"), Song(id: "songid2", name: "songname2"), 
+      Song(id: "songid3", name: "songname3"), Song(id: "songid4", name: "songname4")];
+    
+    playlists = [Playlist(id: "playlistid1", name: "playlist1", ownerId: "ownerid1", songs: songs, collaboratorIds: [userAuth.uid]),
+      Playlist(id: "playlistid2", name: "playlist2", ownerId: "ownerid2", songs: songs, collaboratorIds: [userAuth.uid]),
+      Playlist(id: "playlistid3", name: "playlist3", ownerId: "ownerid3", songs: songs.sublist(0, 1), collaboratorIds: [userAuth.uid])];
+
+    profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [], playlists: playlists, sharedWithMe: []);
+    print(profile.playlists);
+    _bottomNavPages = [
+      HomePage(user: userAuth, signOut: signOut),
+      LibraryPage(playlists: profile.playlists),
+      PlaylistList(playlists: profile.playlists)
+      // PlaylistListItem(name: "songname")
+      // PlaylistPage(playlists: user.snapshots().
+      // .then((doc) => doc['playlists']),)
   ];
   }
 
@@ -121,7 +99,7 @@ class _AppState extends State<App> {
           ),
         ),
       ),
-      body: _pages[_selectedIndex]
+      body: _bottomNavPages[_selectedIndex]
     );
   }
 }
