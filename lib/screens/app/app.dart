@@ -8,6 +8,7 @@ import 'package:music_app/screens/app/friends_page.dart';
 import 'package:music_app/screens/app/home_page.dart';
 import 'package:music_app/screens/app/library_page.dart';
 import 'package:music_app/widgets/playlists/playlistList.dart';
+import 'package:music_app/screens/app/home.dart';
 import '../../models.dart'; // Import Playlist, Friend, Song, Profile
 
 class App extends StatefulWidget {
@@ -32,19 +33,20 @@ class _AppState extends State<App> {
   void initState() {
     // StreamBuilder<DocumentSnapshot> user = FirebaseFirestore.instance.collection('Users').doc(userAuth.uid).snapshots();
 
-    songs = [Song(id: "songid1", name: "songname1"), Song(id: "songid2", name: "songname2"), 
-      Song(id: "songid3", name: "songname3"), Song(id: "songid4", name: "songname4")];
-    
-    playlists = [Playlist(id: "playlistid1", name: "playlist1", ownerId: "ownerid1", songs: songs, collaboratorIds: [userAuth.uid]),
-      Playlist(id: "playlistid2", name: "playlist2", ownerId: "ownerid2", songs: songs, collaboratorIds: [userAuth.uid]),
-      Playlist(id: "playlistid3", name: "playlist3", ownerId: "ownerid3", songs: songs.sublist(0, 1), collaboratorIds: [userAuth.uid])];
-
-    profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [], playlists: playlists, sharedWithMe: []);
-    print(profile.playlists);
+    // songs = [Song(id: "songid1", name: "songname1"), Song(id: "songid2", name: "songname2"),
+    //   Song(id: "songid3", name: "songname3"), Song(id: "songid4", name: "songname4")];
+    //
+    // playlists = [Playlist(id: "playlistid1", name: "playlist1", ownerId: "ownerid1", songs: songs, collaboratorIds: [userAuth.uid]),
+    //   Playlist(id: "playlistid2", name: "playlist2", ownerId: "ownerid2", songs: songs, collaboratorIds: [userAuth.uid]),
+    //   Playlist(id: "playlistid3", name: "playlist3", ownerId: "ownerid3", songs: songs.sublist(0, 1), collaboratorIds: [userAuth.uid])];
+    //
+    // profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [], playlists: playlists, sharedWithMe: []);
+    // print(profile.playlists);
     _bottomNavPages = [
-      HomePage(user: userAuth, signOut: signOut),
-      LibraryPage(playlists: profile.playlists),
-      PlaylistList(playlists: profile.playlists)
+      // HomePage(user: userAuth, signOut: signOut)
+      Home(),
+      // LibraryPage(playlists: profile.playlists),
+      // PlaylistList(playlists: profile.playlists)
       // PlaylistListItem(name: "songname")
       // PlaylistPage(playlists: user.snapshots().
       // .then((doc) => doc['playlists']),)

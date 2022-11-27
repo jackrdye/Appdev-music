@@ -7,7 +7,7 @@ import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-  
+
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,9 +17,12 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  String email = '';
+  String password = '';
+
   Future signIn() async {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(), 
+      email: _emailController.text.trim(),
       password: _passwordController.text.trim()
     );
   }
@@ -41,8 +44,8 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-          
-          
+
+
                 // Welcome
                 Text(
                   "Hello Again!",
@@ -59,8 +62,8 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 75,
                 ),
-                
-          
+
+
                 // Email textfield
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -81,8 +84,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-          
-          
+
+
                 // Password
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -104,17 +107,17 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 25,),
-          
-          
+
+
                 // Sign in button
-          
+
                 InkWell(
                   onTap: signIn,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: Container(
                       padding: const EdgeInsets.all(15),
-                      
+
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(10)
@@ -124,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 3,),
-          
+
                 // Register button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -147,8 +150,8 @@ class _LoginPageState extends State<LoginPage> {
                     )
                   ],
                 )
-          
-          
+
+
               ],
             ),
           ),
@@ -157,6 +160,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
 
 
 

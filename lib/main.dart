@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:music_app/screens/auth/check_auth.dart';
+import 'package:music_app/services/auth.dart';
+import 'package:music_app/screens/wrapper.dart';
+import 'package:provider/provider.dart';
+import 'package:music_app/models/MusicUser.dart';
 
 
 
@@ -17,9 +20,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CheckAuth(),
+    return StreamProvider<MusicUser?>.value(
+      value: AuthService().user,
+      initialData: null,
+      catchError: (_,err) => null,
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Wrapper(),
+      ),
     );
   }
 }
