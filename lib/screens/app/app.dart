@@ -113,10 +113,18 @@ class _AppState extends State<App> {
 
   // Friend Methods
   void addFriend() async {
-
+    // DocumentReference userDoc = FirebaseFirestore.instance.collection("Users").doc()
+    // Need to send to backend and store pending friend requests 
+    // once accepted then update both Users docs  
   }
-  void removeFriend() async {
-    
+  void removeFriend({required String user1Id, required String user2Id}) async {
+    // Remove 'friend' from both Users
+    // Add permission for another user to update friends array of another user if they are contained in it 
+    DocumentReference user1Doc = FirebaseFirestore.instance.collection("Users").doc(user1Id);
+    DocumentReference user2Doc = FirebaseFirestore.instance.collection("Users").doc(user2Id); 
+
+    user1Doc.update({"friends": FieldValue.arrayRemove([user2Id])}); // remove user2's Id from User 1's document
+    user2Doc.update({"friends": FieldValue.arrayRemove([user1Id])}); // remove user1's Id from User 2's document
   }
 
 
