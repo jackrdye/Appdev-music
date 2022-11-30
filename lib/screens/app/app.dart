@@ -96,7 +96,7 @@ class _AppState extends State<App> {
 
     // Add playlist to Users playlist array 
     DocumentReference userDoc = FirebaseFirestore.instance.collection('Users').doc(ownerId);
-    userDoc.update({'playlists': FieldValue.arrayUnion([ownerId])});
+    userDoc.update({'playlists': FieldValue.arrayUnion([playlistDoc])});
   }
 
   void deletePlaylist({required String playlistId}) async {
