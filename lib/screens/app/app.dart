@@ -22,6 +22,7 @@ class _AppState extends State<App> {
   // State
   final userAuth = FirebaseAuth.instance.currentUser!;
   int _selectedIndex = 0;
+  
 
   late List<Widget> _bottomNavPages = [];
   late DocumentReference profilee;
@@ -29,9 +30,10 @@ class _AppState extends State<App> {
   late List<Song> songs;
   late List<Playlist> playlists;
   @override
-  void initState() {
-    // StreamBuilder<DocumentSnapshot> user = FirebaseFirestore.instance.collection('Users').doc(userAuth.uid).snapshots();
-
+  void initState(){
+    DocumentReference userDoc = FirebaseFirestore.instance.collection('Users').doc(userAuth.uid);
+    Object user = getUserProfile(userDoc);
+    
     songs = [Song(id: "songid1", name: "songname1"), Song(id: "songid2", name: "songname2"), 
       Song(id: "songid3", name: "songname3"), Song(id: "songid4", name: "songname4")];
     
@@ -50,19 +52,79 @@ class _AppState extends State<App> {
       // .then((doc) => doc['playlists']),)
   ];
   }
+  
 
   // Methods
+  // UI Methods
   void _navigateBottomBar(index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  // Auth Methods
   Future signOut() async {
     await FirebaseAuth.instance.signOut();
-    }
+  }
+
+  // Profile Methods
+  Object getUserProfile(DocumentReference userReference) async {
+    DocumentSnapshot user = await userReference.get();
+    print(user.data());
+    return user.data();
+  }
+
+  void removePlaylistFromUser({required playlistId}) async {
+
+  }
+
+
+  // Playlist Methods
+  void createNewPlaylist({required String name, required String ownerId}) async {
+    // Get reference to Playlists
+    DocumentReference playlistDoc = FirebaseFirestore.instance.collection('Playlists').doc(); //auto-generate new _id
+    Playlist newPlaylist = Playlist(
+      id: playlistDoc.id,
+      name: name,
+      ownerId: ownerId,
+      songs: [],
+      collaboratorIds: [ownerId]
+    );
+    // Convert to json and insert into Playlists collection
+    final playlistJson = newPlaylist.toJson();
+    await playlistDoc.set(playlistJson);
+
+    // Add playlist to Users playlist array 
+    DocumentReference userDoc = FirebaseFirestore.instance.collection('Users').doc(ownerId);
+    userDoc.update({'playlists': FieldValue.arrayUnion([ownerId])});
+  }
+
+  void deletePlaylist({required String playlistId}) async {
+    // Completely delete playlist from playlist collection
+    DocumentReference playlistDoc = FirebaseFirestore.instance.collection('Playlists').doc(playlistId);
+    playlistDoc.delete();
+  }
+
+  void editPlaylist({required String playlistId, required List<Song> newSongs}) async {
+    DocumentReference playlistDoc = FirebaseFirestore.instance.collection("Playlists").doc(playlistId);
+    playlistDoc.update({"songs": newSongs}); // replace old songs list with newSongs
+  }
+
+
+  // Friend Methods
+  void addFriend() async {
+
+  }
+  void removeFriend() async {
+    
+  }
+
+
+  // Song Methods
   
 
+
+  // UI 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
