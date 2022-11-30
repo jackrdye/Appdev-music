@@ -32,6 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
         username: '', 
         musicService: '', 
         friends: [], 
+        friendRequests: [],
         playlists: [], 
         sharedWithMe: []
       );

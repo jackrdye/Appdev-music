@@ -40,10 +40,11 @@ class Profile {
   String username;
   String musicService;
   List<Friend> friends;
+  List<Friend> friendRequests;
   List<Playlist> playlists;
   List sharedWithMe;
 
-  Profile({required this.id, required this.email, required this.username, required this.musicService, required this.friends, required this.playlists, required this.sharedWithMe});
+  Profile({required this.id, required this.email, required this.username, required this.musicService, required this.friends, required this.friendRequests,required this.playlists, required this.sharedWithMe});
 
   Map<String, dynamic> toJson() => {
     // 'id': id, do not include id in document as it is already the unique identifier 

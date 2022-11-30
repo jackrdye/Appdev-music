@@ -41,7 +41,7 @@ class _AppState extends State<App> {
       Playlist(id: "playlistid2", name: "playlist2", ownerId: "ownerid2", songs: songs, collaboratorIds: [userAuth.uid]),
       Playlist(id: "playlistid3", name: "playlist3", ownerId: "ownerid3", songs: songs.sublist(0, 1), collaboratorIds: [userAuth.uid])];
 
-    profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [], playlists: playlists, sharedWithMe: []);
+    profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [], friendRequests: [], playlists: playlists, sharedWithMe: []);
     print(profile.playlists);
     _bottomNavPages = [
       HomePage(user: userAuth, signOut: signOut),
@@ -112,10 +112,25 @@ class _AppState extends State<App> {
 
 
   // Friend Methods
-  void addFriend() async {
-    // DocumentReference userDoc = FirebaseFirestore.instance.collection("Users").doc()
-    // Need to send to backend and store pending friend requests 
-    // once accepted then update both Users docs  
+  void sendFriendFriendRequest({required String userId, required String recipientId}) async {
+    // Check recipient is not already a friend
+    DocumentReference userDoc = FirebaseFirestore.instance.collection("Users").doc(userId);
+    DocumentReference recipientDoc = FirebaseFirestore.instance.collection("Users").doc(recipientId);
+    DocumentSnapshot profile = await userDoc.get(); // User profile 
+    
+    if (profile["friends"].contains(recipientId)) {
+      print("They are already your friend");
+    } else {
+      recipientDoc.update({"friendRequestIds": FieldValue.arrayUnion([recipientId])});
+    }
+  }
+  void acceptFriendRequest({required String userId, required String friendId}) async {
+    // accept from friend requests list
+    DocumentReference userDoc = FirebaseFirestore.instance.collection("Users").doc(userId);
+    DocumentReference friendDoc = FirebaseFirestore.instance.collection("Users").doc(friendId);
+
+    userDoc.update({"friends": FieldValue.arrayUnion([friendId])});
+    friendDoc.update({"friends": FieldValue.arrayUnion([userId])});
   }
   void removeFriend({required String user1Id, required String user2Id}) async {
     // Remove 'friend' from both Users
