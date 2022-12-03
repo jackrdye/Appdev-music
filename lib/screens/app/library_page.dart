@@ -5,7 +5,6 @@ import 'package:music_app/models.dart';
 import 'package:music_app/widgets/playlists/playlistList.dart';
 
 
-
 class LibraryPage extends StatelessWidget {
   List<Playlist> playlists;
   LibraryPage({super.key, required this.playlists});

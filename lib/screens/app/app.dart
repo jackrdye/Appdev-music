@@ -11,6 +11,7 @@ import 'package:music_app/widgets/playlists/playlistList.dart';
 import '../../models.dart'; // Import Playlist, Friend, Song, Profile
 
 class App extends StatefulWidget {
+  // DocumentSnapshot<Object?>? userDocument;
   const App({super.key}); 
 
   @override
@@ -25,33 +26,82 @@ class _AppState extends State<App> {
   
 
   late List<Widget> _bottomNavPages = [];
-  late DocumentReference profilee;
+  late DocumentReference userRef;
   late Profile profile;
   late List<Song> songs;
   late List<Playlist> playlists;
+
   @override
-  void initState(){
+  void initState() {
+    super.initState();
     DocumentReference userDoc = FirebaseFirestore.instance.collection('Users').doc(userAuth.uid);
-    Object user = getUserProfile(userDoc);
+    // userRef = FirebaseFirestore.instance.collection("Users").doc(userAuth.uid);
+    // profilee = getUserProfile(userRef);
+    // print(profilee);
+    // print(widget.userDocument!.data());
+
+    // Object profileObject = getUserProfile(userRef);
+    // print(profileObject);
+    // Profile profile = Profile(
+    //   email: profileObject['email'], 
+    //   username: profileObject['username'], 
+    //   musicService: profileObject['musicService'], 
+    //   friends: profileObject['friends'], 
+    //   friendRequests: profileObject['friendRequests'], 
+    //   playlists: profileObject['playlists'], 
+    //   sharedWithMe: profileObject['sharedWithMe']
+    // )
     
     songs = [Song(id: "songid1", name: "songname1"), Song(id: "songid2", name: "songname2"), 
       Song(id: "songid3", name: "songname3"), Song(id: "songid4", name: "songname4")];
+    // for (var element in songs) {
+    //   DocumentReference songDoc = FirebaseFirestore.instance.collection("Songs").doc();
+    //   print(element.toJson());
+    //   songDoc.set(element.toJson());
+    // }
     
     playlists = [Playlist(id: "playlistid1", name: "playlist1", ownerId: "ownerid1", songs: songs, collaboratorIds: [userAuth.uid]),
       Playlist(id: "playlistid2", name: "playlist2", ownerId: "ownerid2", songs: songs, collaboratorIds: [userAuth.uid]),
       Playlist(id: "playlistid3", name: "playlist3", ownerId: "ownerid3", songs: songs.sublist(0, 1), collaboratorIds: [userAuth.uid])];
+    
+    // for (var element in playlists) {
+    //   DocumentReference playlistDoc = FirebaseFirestore.instance.collection("Playlists").doc();
+    //   print(element.toJson());
+    //   playlistDoc.set(element.toJson());
+    // }
 
-    profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [], friendRequests: [], playlists: playlists, sharedWithMe: []);
-    print(profile.playlists);
+    profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [Friend(id: "hi", name: "Dhruv")], friendRequests: [], playlists: playlists, sharedWithMe: []);
+    userDoc.set(profile.toJson());
+    // print(profile.playlists);
     _bottomNavPages = [
       HomePage(user: userAuth, signOut: signOut),
       LibraryPage(playlists: profile.playlists),
-      PlaylistList(playlists: profile.playlists)
+      FriendsPage(friends: profile.friends,)
       // PlaylistListItem(name: "songname")
       // PlaylistPage(playlists: user.snapshots().
       // .then((doc) => doc['playlists']),)
-  ];
+    ];
   }
+  // State handlers
+  void updateBottomNavPages() {
+    _bottomNavPages = [
+      HomePage(user: userAuth, signOut: signOut),
+      LibraryPage(playlists: profile.playlists),
+      FriendsPage(friends: profile.friends,)
+    ];
+  }
+
+  // Call to lazily load friends and playlists data
+  // void loadPlaylistsAndFriends(List<String> friendIds, List<String> playlistIds) async {
+    // List<Friend> friendsList= friendIds.map((id) {
+      
+    // });
+  //   List<Playlist> playlistList = playlistIds.map((id) {
+      
+  //   });
+
+  //   profile.friends = 
+  // }
   
 
   // Methods
@@ -68,8 +118,8 @@ class _AppState extends State<App> {
   }
 
   // Profile Methods
-  Object getUserProfile(DocumentReference userReference) async {
-    DocumentSnapshot user = await userReference.get();
+  Object getUserProfile(DocumentReference userRef) async {
+    DocumentSnapshot user = await userRef.get();
     print(user.data());
     return user.data();
   }
@@ -150,41 +200,64 @@ class _AppState extends State<App> {
   // UI 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-            child: GNav(
-              onTabChange: (index) {
-                _navigateBottomBar(index);
-              },
-              selectedIndex: _selectedIndex,
-              tabActiveBorder: Border.all(color: Colors.black, width: 1),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              gap: 5,
-              tabs: const [
-                GButton(
-                  icon: Icons.home, 
-                  text: "Home",
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection("Users").doc(userAuth.uid).snapshots(),
+      builder: ((context, snapshot) {
+        if (!snapshot.hasData) {
+          return Text("Loading");
+        }
+        var userDoc = snapshot.data!.data()!;
+        print(userDoc);
+
+        // profile = Profile(
+        //   id: userAuth.uid, 
+        //   email: userDoc['email']!, 
+        //   username: userDoc['username']!, 
+        //   musicService: userDoc['musicService']!, 
+        //   // friends: userDoc['friends']!, [{id:, name: }]
+        //   friendRequests: userDoc['friendRequests']!, 
+        //   // playlists: userDoc['playlists']!, 
+        //   sharedWithMe: userDoc['sharedWithMe']!
+        // );
+        // loadPlaylistsAndFriends();
+
+        return Scaffold(
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                child: GNav(
+                  onTabChange: (index) {
+                    _navigateBottomBar(index);
+                  },
+                  selectedIndex: _selectedIndex,
+                  tabActiveBorder: Border.all(color: Colors.black, width: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  gap: 5,
+                  tabs: const [
+                    GButton(
+                      icon: Icons.home, 
+                      text: "Home",
+                    ),
+                    GButton(
+                      icon: Icons.library_music_outlined, 
+                      text: "Library",
+                      ),
+                    GButton(
+                      icon: Icons.people_alt, 
+                    text: "Friends",
+                    )
+                  ]
                 ),
-                GButton(
-                  icon: Icons.library_music_outlined, 
-                  text: "Library",
-                  ),
-                GButton(
-                  icon: Icons.people_alt, 
-                text: "Friends",
-                )
-              ]
+              ),
             ),
           ),
-        ),
-      ),
-      body: _bottomNavPages[_selectedIndex]
+          body: _bottomNavPages[_selectedIndex]
+        );
+      })
     );
   }
 }

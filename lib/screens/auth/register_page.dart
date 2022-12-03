@@ -26,6 +26,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
       // Create user in firestore
       final docUser = FirebaseFirestore.instance.collection('Users').doc(uid);
+      // playlistDoc = FirebaseFirestore.instance.collection('Playlist').doc();
+      
+      // playlist.set()
+
       final user = Profile(
         id: uid, 
         email: email, 
