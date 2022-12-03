@@ -13,6 +13,7 @@ class PlaylistList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
         itemCount: playlists.length,
         itemBuilder: ((context, index) {
           return PlaylistListItem(playlist: playlists[index]);

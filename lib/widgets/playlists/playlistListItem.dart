@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:music_app/models.dart';
 import 'package:music_app/widgets/playlists/displayPlaylistContent.dart';
+import 'dart:math' as math;
 
 class PlaylistListItem extends StatelessWidget {
   Playlist playlist;
@@ -23,6 +24,18 @@ class PlaylistListItem extends StatelessWidget {
           },
           
           child: ListTile(
+            leading: Container(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(0.75),
+              ),
+              child: Center(
+                  child: Text(
+                      playlist.name[0].toUpperCase(),
+                      style: TextStyle(fontSize: 24)),
+              ),
+            ),
             // leading: const Icon(Icons.list),
             // shape: RoundedRectangleBorder(
             //   side: BorderSide(width: 2, color: Colors.black38),
@@ -35,7 +48,20 @@ class PlaylistListItem extends StatelessWidget {
             //   }),
             //   child: Icon(Icons.play_circle)
             // ),
-            title: Text(playlist.name, style: TextStyle(fontSize: 28),)
+            title: Text(playlist.name, style: TextStyle(fontSize: 20),),
+            trailing: Container(
+              height: 30,
+              width: 130,
+              decoration: BoxDecoration(
+                color: Colors.blue.shade200,
+                borderRadius: BorderRadius.circular(20)
+              ),
+              child: Center(
+                child: Text(
+                    '3 collaborators',
+                    style: TextStyle(fontSize: 14)),
+              ),
+            ),
           ),
         ),
         Divider(color: Colors.grey[400],)
