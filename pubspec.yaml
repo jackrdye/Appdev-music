@@ -43,6 +43,7 @@ dependencies:
   device_preview: ^1.1.0
   google_fonts: 
   google_nav_bar: ^5.0.6
+  http:
 
 dev_dependencies:
   flutter_test:
