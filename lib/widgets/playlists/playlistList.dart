@@ -6,16 +6,16 @@ import 'package:music_app/widgets/playlists/playlistListItem.dart';
 
 
 class PlaylistList extends StatelessWidget {
-  List<Playlist> playlists;
-  PlaylistList({super.key, required this.playlists});
+  List<PlaylistInfo> playlistsInfo;
+  PlaylistList({super.key, required this.playlistsInfo});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: ListView.builder(
-        itemCount: playlists.length,
+        itemCount: playlistsInfo.length,
         itemBuilder: ((context, index) {
-          return PlaylistListItem(playlist: playlists[index]);
+          return PlaylistListItem(playlistInfo: playlistsInfo[index]);
         })
       ),
     );

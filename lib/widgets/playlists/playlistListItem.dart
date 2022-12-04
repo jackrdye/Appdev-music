@@ -6,8 +6,8 @@ import 'package:music_app/models.dart';
 import 'package:music_app/widgets/playlists/displayPlaylistContent.dart';
 
 class PlaylistListItem extends StatelessWidget {
-  Playlist playlist;
-  PlaylistListItem({super.key, required this.playlist});
+  PlaylistInfo playlistInfo;
+  PlaylistListItem({super.key, required this.playlistInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class PlaylistListItem extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DisplayPlaylistContent(playlist: playlist,)),
+              MaterialPageRoute(builder: (context) => DisplayPlaylistContent(playlist: playlistInfo,)),
             );
           },
           
@@ -35,7 +35,7 @@ class PlaylistListItem extends StatelessWidget {
             //   }),
             //   child: Icon(Icons.play_circle)
             // ),
-            title: Text(playlist.name, style: TextStyle(fontSize: 28),)
+            title: Text(playlistInfo.name, style: TextStyle(fontSize: 28),)
           ),
         ),
         Divider(color: Colors.grey[400],)

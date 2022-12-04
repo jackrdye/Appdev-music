@@ -6,8 +6,8 @@ import 'package:music_app/widgets/playlists/playlistList.dart';
 
 
 class LibraryPage extends StatelessWidget {
-  List<Playlist> playlists;
-  LibraryPage({super.key, required this.playlists});
+  List<PlaylistInfo> playlistsInfo;
+  LibraryPage({super.key, required this.playlistsInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class LibraryPage extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: PlaylistList(playlists: playlists)
+            child: PlaylistList(playlistsInfo: playlistsInfo)
           ),
         ],
       ),

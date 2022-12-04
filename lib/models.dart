@@ -70,7 +70,7 @@ class Profile {
   String musicService;
   List<Friend> friends;
   List<Friend> friendRequests;
-  List<Playlist> playlists;
+  List<PlaylistInfo> playlists;
   List sharedWithMe;
 
   Profile({required this.id, required this.email, required this.username, required this.musicService, required this.friends, required this.friendRequests, required this.playlists, required this.sharedWithMe});
@@ -85,4 +85,10 @@ class Profile {
     'sharedWithMe': sharedWithMe,
   };
 
+}
+class PlaylistInfo {
+  String id;
+  String name;
+
+  PlaylistInfo({required this.id, required this.name});
 }

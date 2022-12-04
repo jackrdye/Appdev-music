@@ -28,8 +28,9 @@ class _AppState extends State<App> {
   late List<Widget> _bottomNavPages = [];
   late DocumentReference userRef;
   late Profile profile;
-  late List<Song> songs;
-  late List<Playlist> playlists;
+  // late List<Song> songs;
+  // late List<Playlist> playlists;
+  bool loaded = false;
 
   @override
   void initState() {
@@ -52,17 +53,17 @@ class _AppState extends State<App> {
     //   sharedWithMe: profileObject['sharedWithMe']
     // )
     
-    songs = [Song(id: "songid1", name: "songname1"), Song(id: "songid2", name: "songname2"), 
-      Song(id: "songid3", name: "songname3"), Song(id: "songid4", name: "songname4")];
+    // songs = [Song(id: "songid1", name: "songname1"), Song(id: "songid2", name: "songname2"), 
+    //   Song(id: "songid3", name: "songname3"), Song(id: "songid4", name: "songname4")];
     // for (var element in songs) {
     //   DocumentReference songDoc = FirebaseFirestore.instance.collection("Songs").doc();
     //   print(element.toJson());
     //   songDoc.set(element.toJson());
     // }
     
-    playlists = [Playlist(id: "playlistid1", name: "playlist1", ownerId: "ownerid1", songs: songs, collaboratorIds: [userAuth.uid]),
-      Playlist(id: "playlistid2", name: "playlist2", ownerId: "ownerid2", songs: songs, collaboratorIds: [userAuth.uid]),
-      Playlist(id: "playlistid3", name: "playlist3", ownerId: "ownerid3", songs: songs.sublist(0, 1), collaboratorIds: [userAuth.uid])];
+    // playlists = [Playlist(id: "playlistid1", name: "playlist1", ownerId: "ownerid1", songs: songs, collaboratorIds: [userAuth.uid]),
+    //   Playlist(id: "playlistid2", name: "playlist2", ownerId: "ownerid2", songs: songs, collaboratorIds: [userAuth.uid]),
+    //   Playlist(id: "playlistid3", name: "playlist3", ownerId: "ownerid3", songs: songs.sublist(0, 1), collaboratorIds: [userAuth.uid])];
     
     // for (var element in playlists) {
     //   DocumentReference playlistDoc = FirebaseFirestore.instance.collection("Playlists").doc();
@@ -70,12 +71,12 @@ class _AppState extends State<App> {
     //   playlistDoc.set(element.toJson());
     // }
 
-    profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [Friend(id: "hi", name: "Dhruv")], friendRequests: [], playlists: playlists, sharedWithMe: []);
-    userDoc.set(profile.toJson());
+    profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [Friend(id: "hi", name: "Dhruv")], friendRequests: [], playlists: [], sharedWithMe: []);
+    // userDoc.set(profile.toJson());
     // print(profile.playlists);
     _bottomNavPages = [
       HomePage(user: userAuth, signOut: signOut),
-      LibraryPage(playlists: profile.playlists),
+      LibraryPage(playlistsInfo: profile.playlists),
       FriendsPage(friends: profile.friends,)
       // PlaylistListItem(name: "songname")
       // PlaylistPage(playlists: user.snapshots().
@@ -86,23 +87,67 @@ class _AppState extends State<App> {
   void updateBottomNavPages() {
     _bottomNavPages = [
       HomePage(user: userAuth, signOut: signOut),
-      LibraryPage(playlists: profile.playlists),
+      LibraryPage(playlistsInfo: profile.playlists),
       FriendsPage(friends: profile.friends,)
     ];
   }
 
   // Call to lazily load friends and playlists data
   // void loadPlaylistsAndFriends(List<String> friendIds, List<String> playlistIds) async {
-    // List<Friend> friendsList= friendIds.map((id) {
-      
-    // });
-  //   List<Playlist> playlistList = playlistIds.map((id) {
-      
-  //   });
+  //   List<Future<DocumentSnapshot>> friendFutures = [];
+  //   List<Future<DocumentSnapshot>> playlistFutures = [];
+  //   for (String id in friendIds) {
+  //     friendFutures.add(FirebaseFirestore.instance.collection("Users").doc(id).get());
+  //   }
+  //   for (String id in playlistIds) {
+  //     playlistFutures.add(FirebaseFirestore.instance.collection("Playlist").doc(id).get());
+  //   }
 
-  //   profile.friends = 
+  //   await Future.wait(friendFutures);
+  //   await Future.wait(playlistFutures);
+
+  //   await Future.wait([
+
+  //   ])
+
+  //   profile.playlists = playlistFutures.map((playlistDoc) {
+  //     playlistDoc = playlistDoc.data();
+  //     return Playlist(id: playlistDoc., name: name, ownerId: ownerId, songs: songs, collaboratorIds: collaboratorIds)
+  //   }).toList();
+
+  //   List<Friend> friendsList = friendIds.map((id) async {
+  //     DocumentSnapshot friend = await FirebaseFirestore.instance.collection("Users").doc(id).get();
+  //     Object friendDoc = friend.data();
+      
+  //     Friend friend = Friend(id: id, name: friendDoc["email"]);
+  //     return friend;
+  //   }).toList();
+  //   // List<Playlist> playlistList = playlistIds.map((id) {
+  //   // });
+  //   // profile.friends = 
+  //   loaded = true;
+    
   // }
-  
+
+  // List<DocumentSnapshot> loadPlaylists(List<String> playlistIds) async {
+  //   List<Playlist> playlists1 = [];
+  //   List<DocumentSnapshot> playlistSnapshots = [];
+  //   List<Future<DocumentSnapshot>> playlistSnapshotsFutures = [];
+  //   for (String playlistId in playlistIds) {
+  //     print(playlistId);
+  //     playlistSnapshotsFutures.add(FirebaseFirestore.instance.collection("Playlist").doc(playlistId).get());
+  //   }
+  //   await Future.wait(playlistSnapshotsFutures).then((List<DocumentSnapshot> playlistSnapshotss) {
+  //     playlistSnapshots = playlistSnapshotss;
+  //     print(playlistSnapshots);
+  //     print(playlistSnapshots[0]);
+
+  //     return playlistSnapshots;
+  //   });
+  //   return playlistSnapshots;
+  // }
+
+
 
   // Methods
   // UI Methods
@@ -208,6 +253,7 @@ class _AppState extends State<App> {
         }
         var userDoc = snapshot.data!.data()!;
         print(userDoc);
+        // loadPlaylists(List<String>.from(userDoc['playlists'] as List));
 
         // profile = Profile(
         //   id: userAuth.uid, 
