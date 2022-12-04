@@ -33,7 +33,7 @@ class _RegisterPageState extends State<RegisterPage> {
       final user = Profile(
         id: uid, 
         email: email, 
-        username: '', 
+        username: email, 
         musicService: '', 
         friends: [], 
         friendRequests: [],

@@ -98,8 +98,9 @@ class Profile {
     'email': email,
     'username': username,
     'musicService': musicService,
+    'friendRequests': friendRequests,
     'friends': friends,
-    'playlists': playlists,
+    'playlistsInfo': playlists,
     'sharedWithMe': sharedWithMe,
   };
 

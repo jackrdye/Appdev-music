@@ -239,6 +239,7 @@ class _AppState extends State<App> {
         if (!snapshot.hasData) {
           return Text("Loading");
         }
+        // FirebaseFirestore.instance.collection("Users").doc(userAuth.uid).update({"friendRequests": [], "playlists": [{"name": "Jack", "id": "IAcNMC58mDl2KK6yEHyB"}, {"name": "Create", "id": "6ExQC36AVKkYSL6mIET2"}], "musicService": "Spotify", "email": "jackdye2002@gmail.com", "friends": [], "sharedWithMe": [], "username": "jack"});
         var userDoc = snapshot.data!.data()!;
         print(userDoc);
         // loadPlaylists(List<String>.from(userDoc['playlists'] as List));
@@ -271,7 +272,7 @@ class _AppState extends State<App> {
             title: Text("Sync"),
             actions: [IconButton(onPressed: (){
               setState(() {
-                _selectedIndex = 3;
+                _selectedIndex = 2;
               });
             }, icon: Icon(Icons.person))],
           ),
@@ -291,10 +292,6 @@ class _AppState extends State<App> {
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                   gap: 5,
                   tabs: const [
-                    // GButton(
-                    //   icon: Icons.home, 
-                    //   text: "Home",
-                    // ),
                     GButton(
                       icon: Icons.library_music_outlined, 
                       text: "Library",
@@ -303,7 +300,10 @@ class _AppState extends State<App> {
                       icon: Icons.people_alt, 
                     text: "Friends",
                     ),
-                    // GButton()
+                    GButton(
+                      icon: Icons.settings, 
+                      text: "Settings",
+                    ),
                   ]
                 ),
               ),
