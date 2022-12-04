@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/models/MusicUser.dart';
+import 'package:music_app/services/database.dart';
 
 class AuthService {
 
@@ -38,6 +39,8 @@ class AuthService {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
+
+      await DatabaseService(uid: user!.uid).updateUserData('new user', 'spotify');
       if(user == null) {
         return null;
       }

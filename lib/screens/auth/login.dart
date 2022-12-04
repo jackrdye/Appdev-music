@@ -36,7 +36,7 @@ class _LoginState extends State<Login> {
 
                   // Welcome
                   Text(
-                    "Hello Again!",
+                    "Sync",
                     style: GoogleFonts.bebasNeue(
                       fontSize: 36,
                     ),
@@ -45,7 +45,7 @@ class _LoginState extends State<Login> {
                     height: 5,
                   ),
                   const Text(
-                      "Welcome back you've been missed!"
+                      "Welcome back to Sync, you've been missed!"
                   ),
                   const SizedBox(
                     height: 75,
