@@ -18,7 +18,7 @@ class PlaylistListItem extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DisplayPlaylistContent(playlist: playlistInfo,)),
+              MaterialPageRoute(builder: (context) => DisplayPlaylistContent(playlistInfo: playlistInfo,)),
             );
           },
           

@@ -182,7 +182,7 @@ class _AppState extends State<App> {
       id: playlistDoc.id,
       name: name,
       ownerId: ownerId,
-      songs: [],
+      songsInfo: [],
       collaboratorIds: [ownerId]
     );
     // Convert to json and insert into Playlists collection
@@ -254,18 +254,28 @@ class _AppState extends State<App> {
         var userDoc = snapshot.data!.data()!;
         print(userDoc);
         // loadPlaylists(List<String>.from(userDoc['playlists'] as List));
+        print(userDoc["friends"]);
+        for (var friend in userDoc["friends"]) {
+          print(friend);
+          print(friend["id"].runtimeType);
+        }
+        for (var playlist in userDoc["playlists"]) {
+          print(playlist);
+          print(playlist["id"].runtimeType);
+        }
 
-        // profile = Profile(
-        //   id: userAuth.uid, 
-        //   email: userDoc['email']!, 
-        //   username: userDoc['username']!, 
-        //   musicService: userDoc['musicService']!, 
-        //   // friends: userDoc['friends']!, [{id:, name: }]
-        //   friendRequests: userDoc['friendRequests']!, 
-        //   // playlists: userDoc['playlists']!, 
-        //   sharedWithMe: userDoc['sharedWithMe']!
-        // );
+        profile = Profile(
+          id: userAuth.uid, 
+          email: userDoc['email']!, 
+          username: userDoc['username']!, 
+          musicService: userDoc['musicService']!, 
+          friends: List<Friend>.from(userDoc['friends']!.map((friendJson) => Friend.fromJson(friendJson)).toList()), //[{id: , name: }]
+          friendRequests: List<Friend>.from(userDoc['friendRequests']!.map((friendJson) => Friend.fromJson(friendJson)).toList()), 
+          playlists: List<PlaylistInfo>.from(userDoc['playlists']!.map((playlistJson) => PlaylistInfo.fromJson(playlistJson)).toList()), //[{id: , name: }]
+          sharedWithMe: userDoc['sharedWithMe']!
+        );
         // loadPlaylistsAndFriends();
+        updateBottomNavPages();
 
         return Scaffold(
           bottomNavigationBar: Container(

@@ -4,10 +4,10 @@ class Playlist {
   String id;
   String name;
   String ownerId;
-  List<Song> songs;
+  List<SongInfo> songsInfo;
   List<String> collaboratorIds;
 
-  Playlist({required this.id, required this.name, required this.ownerId, required this.songs, required this.collaboratorIds});
+  Playlist({required this.id, required this.name, required this.ownerId, required this.songsInfo, required this.collaboratorIds});
 
   // void getSongIds() =>  {
   //   var songIds = songs.map((song) => song.id).toList();
@@ -20,7 +20,7 @@ class Playlist {
     // 'id': id, do not include id in document as it is already the unique identifier 
     'name': name,
     'ownerId': ownerId,
-    'songs': songs.map((song) => song.id).toList(), // convert Song models to just each song id for database
+    'songsInfo': songsInfo.map((song) => {'id': song.id, 'name': song.name, 'imgLink': song.imgLink}).toList(), // convert Song models to just each song id for database
     'collaboratorIds': collaboratorIds,
   };
   
@@ -43,6 +43,9 @@ class Friend {
 
   //   return 
   // }
+  factory Friend.fromJson(dynamic json) {
+    return Friend(id: json['id'] as String, name: json['name'] as String);
+  }
 }
 
 class Song {
@@ -91,4 +94,21 @@ class PlaylistInfo {
   String name;
 
   PlaylistInfo({required this.id, required this.name});
+
+  factory PlaylistInfo.fromJson(dynamic json) {
+    return PlaylistInfo(id: json['id'] as String, name: json['name'] as String);
+  }
+}
+
+
+class SongInfo {
+  String id;
+  String name;
+  String imgLink;
+
+  SongInfo({required this.id, required this.name, this.imgLink=""});
+
+  factory SongInfo.fromJson(dynamic json) {
+    return SongInfo(id: json['id'] as String, name: json['name'] as String, imgLink:  json["imgLink"]!=null ? json["imgLink"] as String : "");
+  }
 }
