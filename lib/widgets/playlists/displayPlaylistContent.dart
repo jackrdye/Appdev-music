@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:music_app/models.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DisplayPlaylistContent extends StatefulWidget {
   PlaylistInfo playlistInfo;
@@ -115,30 +117,46 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
                       child: ListView.builder(
                         itemCount: playlist.songsInfo.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Column(
-                            children: [
-                              ListTile(
-                                trailing: InkWell(
-                                  onTap: (() {
-                                    // Play song
-                                    print("play ${playlist.songsInfo[index].name}");
-                                    // fetchSongData(playlist.songsInfo[index].id);
+                          return InkWell(
+                            onTap: () async {
+                              if( await canLaunchUrl(Uri.parse("https://open.spotify.com/track/6XNANAB7sFvkfho6bMCp7o"))) {
+                                await launchUrl(
+                                  Uri.parse("https://open.spotify.com/track/6XNANAB7sFvkfho6bMCp7o"),
+                                );
+                              }
+                            },
+                            child: Column (
+                                    children: [
+                                      ListTile(
+                                        leading: Image.network (
+                                    'https://i.scdn.co/image/ab67616d0000b27360ec4df52c2d724bc53ffec5',
+                                    height: 50,
+                                    width: 50,
+                                  ),
+                                  trailing: InkWell(
+                                          onTap: (() {
+                                            // Play song
+                                            print("play ${playlist.songsInfo[index].name}");
+                                          // fetchSongData(playlist.songsInfo[index].id);
 
-                                  }),
-                                  child: Icon(Icons.play_circle)
+                                    }),
+                                    child: Icon(Icons.play_circle)
+                                  ),
+                                  // style: TextStyle(color: Colors.green, fontSize: 15),
+                                  title: Text(playlist.songsInfo[index].name,
+                                    style: TextStyle(fontSize: 16)),
+                                  subtitle: Text('Jaden'),
                                 ),
-                                // style: TextStyle(color: Colors.green, fontSize: 15),
-                                title: Text(playlist.songsInfo[index].name)
-                              ),
-                              Divider(color: Colors.grey[400],)
-                            ],
+                                Divider(height: 2, thickness: 1, color: Colors.grey[400],)
+                              ],
+                            )
                           );
                         }
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ]
+                )
+              )
             )
           );
         }

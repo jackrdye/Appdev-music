@@ -77,10 +77,11 @@ class _AppState extends State<App> {
     // userDoc.set(profile.toJson());
     // print(profile.playlists);
     _bottomNavPages = [
-      HomePage(user: userAuth, signOut: signOut),
+      // HomePage(user: userAuth, signOut: signOut),
       LibraryPage(playlistsInfo: profile.playlists),
       FriendsPage(friends: profile.friends,),
-      ProfilePage()
+      ProfilePage(profile: profile,),
+      ProfilePage(profile: profile,)
       // PlaylistListItem(name: "songname")
       // PlaylistPage(playlists: user.snapshots().
       // .then((doc) => doc['playlists']),)
@@ -89,9 +90,11 @@ class _AppState extends State<App> {
   // State handlers
   void updateBottomNavPages() {
     _bottomNavPages = [
-      HomePage(user: userAuth, signOut: signOut),
+      // HomePage(user: userAuth, signOut: signOut),
       LibraryPage(playlistsInfo: profile.playlists),
-      FriendsPage(friends: profile.friends,)
+      FriendsPage(friends: profile.friends,),
+      ProfilePage(profile: profile,),
+      ProfilePage(profile: profile,)
     ];
   }
 
@@ -267,7 +270,9 @@ class _AppState extends State<App> {
           appBar: AppBar(
             title: Text("Sync"),
             actions: [IconButton(onPressed: (){
-              _selectedIndex = 3;
+              setState(() {
+                _selectedIndex = 3;
+              });
             }, icon: Icon(Icons.person))],
           ),
           bottomNavigationBar: Container(
@@ -286,10 +291,10 @@ class _AppState extends State<App> {
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                   gap: 5,
                   tabs: const [
-                    GButton(
-                      icon: Icons.home, 
-                      text: "Home",
-                    ),
+                    // GButton(
+                    //   icon: Icons.home, 
+                    //   text: "Home",
+                    // ),
                     GButton(
                       icon: Icons.library_music_outlined, 
                       text: "Library",
@@ -297,7 +302,8 @@ class _AppState extends State<App> {
                     GButton(
                       icon: Icons.people_alt, 
                     text: "Friends",
-                    )
+                    ),
+                    // GButton()
                   ]
                 ),
               ),

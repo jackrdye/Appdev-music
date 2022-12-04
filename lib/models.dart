@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Playlist {
   String id;
@@ -51,11 +53,13 @@ class Friend {
 class Song {
   String id;
   String name;
+  String artist;
+  String imageLink;
   String spotifyLink;
   String appleMusicLink;
   String youtubeMusicLink;
 
-  Song({required this.id, required this.name, this.spotifyLink="", this.appleMusicLink="", this.youtubeMusicLink=""});
+  // Song({required this.id, required this.name, this.spotifyLink="", this.appleMusicLink="", this.youtubeMusicLink=""});
 
   Map<String, dynamic> toJson() => {
     'name': name, 
@@ -64,6 +68,17 @@ class Song {
     'youtubeMusicLink': youtubeMusicLink, 
     
   };
+  Song({required this.id, required this.name, this.artist="", this.imageLink="", this.spotifyLink="", this.appleMusicLink="", this.youtubeMusicLink=""});
+
+  factory Song.fromJSON(Map<String, dynamic> json) {
+    return Song(
+      id: "1",
+      name: json['name'],
+      spotifyLink: json['external_urls']['spotify'],
+      artist: json['artists'][0]['name'],
+      imageLink: json['album']['images'][0]['url'],
+    );
+  }
 }
 
 class Profile {
@@ -88,6 +103,45 @@ class Profile {
     'sharedWithMe': sharedWithMe,
   };
 
+  Future spotifyAccess() async {
+    String clientID = 'd8f3a9af98514ded9e50c366ed7a50db';
+    String clientSecret = '36922a8ab95b47f8aac8659cd7190b64';
+    String auth_url = 'https://accounts.spotify.com/api/token';
+
+    dynamic response = await http.post(
+      Uri.parse(auth_url),
+      body: <String, String> {
+        'grant_type': 'client_credentials',
+        'client_id': clientID,
+        'client_secret': clientSecret,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      dynamic result = json.decode(response.body);
+      final token = result['access_token'];
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+      };
+      return headers;
+    }
+    return null;
+  }
+
+  Future fetchSong(String content) async {
+    dynamic headers = spotifyAccess();
+    String base_url = 'https://api.spotify.com/v1/';
+    String search_url = base_url + 'search?query='+content+"&type=track&limit=1&market=HK";
+    dynamic data = await http.get(
+        Uri.parse(search_url),
+        headers: headers,
+    );
+    data = json.decode(data.body);
+    dynamic song_data = data['tracks']['items'][0];
+    Song newSong = Song.fromJSON(song_data);
+    return newSong;
+  }
+
 }
 class PlaylistInfo {
   String id;
@@ -111,4 +165,7 @@ class SongInfo {
   factory SongInfo.fromJson(dynamic json) {
     return SongInfo(id: json['id'] as String, name: json['name'] as String, imgLink:  json["imgLink"]!=null ? json["imgLink"] as String : "");
   }
+  
 }
+
+
