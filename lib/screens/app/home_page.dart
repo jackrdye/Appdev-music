@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("You're logged in as: ${widget.user.uid}"),
+            Text("You're logged in as: ${widget.user.email}"),
 
             InkWell(
                   child: Padding(

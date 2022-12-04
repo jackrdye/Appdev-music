@@ -7,6 +7,8 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:music_app/screens/app/friends_page.dart';
 import 'package:music_app/screens/app/home_page.dart';
 import 'package:music_app/screens/app/library_page.dart';
+import 'package:music_app/screens/app/profile_page.dart';
+import 'package:music_app/screens/auth/login_page.dart';
 import 'package:music_app/widgets/playlists/playlistList.dart';
 import '../../models.dart'; // Import Playlist, Friend, Song, Profile
 
@@ -77,7 +79,8 @@ class _AppState extends State<App> {
     _bottomNavPages = [
       HomePage(user: userAuth, signOut: signOut),
       LibraryPage(playlistsInfo: profile.playlists),
-      FriendsPage(friends: profile.friends,)
+      FriendsPage(friends: profile.friends,),
+      ProfilePage()
       // PlaylistListItem(name: "songname")
       // PlaylistPage(playlists: user.snapshots().
       // .then((doc) => doc['playlists']),)
@@ -175,24 +178,6 @@ class _AppState extends State<App> {
 
 
   // Playlist Methods
-  void createNewPlaylist({required String name, required String ownerId}) async {
-    // Get reference to Playlists
-    DocumentReference playlistDoc = FirebaseFirestore.instance.collection('Playlists').doc(); //auto-generate new _id
-    Playlist newPlaylist = Playlist(
-      id: playlistDoc.id,
-      name: name,
-      ownerId: ownerId,
-      songsInfo: [],
-      collaboratorIds: [ownerId]
-    );
-    // Convert to json and insert into Playlists collection
-    final playlistJson = newPlaylist.toJson();
-    await playlistDoc.set(playlistJson);
-
-    // Add playlist to Users playlist array 
-    DocumentReference userDoc = FirebaseFirestore.instance.collection('Users').doc(ownerId);
-    userDoc.update({'playlists': FieldValue.arrayUnion([playlistDoc])});
-  }
 
   void deletePlaylist({required String playlistId}) async {
     // Completely delete playlist from playlist collection
@@ -277,7 +262,14 @@ class _AppState extends State<App> {
         // loadPlaylistsAndFriends();
         updateBottomNavPages();
 
+
         return Scaffold(
+          appBar: AppBar(
+            title: Text("Sync"),
+            actions: [IconButton(onPressed: (){
+              _selectedIndex = 3;
+            }, icon: Icon(Icons.person))],
+          ),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
               color: Colors.grey[200],

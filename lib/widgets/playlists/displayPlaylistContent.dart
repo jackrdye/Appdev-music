@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -24,13 +25,29 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
     print(playlistInfo.id);
   }
 
-  void fetchSongData(String songId) async {
-    DocumentSnapshot song = await FirebaseFirestore.instance.collection("Songs").doc(songId).get();
-    print(song.data());
-    // Start some action play song etc.....
+  // void addSongToPlaylist(String name) async {
+  //   QuerySnapshot songDoc = await FirebaseFirestore.instance.collection('Songs').where('name', isEqualTo: 1).get(); //auto-generate new _id
+    
+  //   // Convert to json and insert into Playlists collection
+  //   final playlistJson = newPlaylist.toJson();
+  //   await playlistDoc.set(playlistJson);
 
-    // return song.data();
-  }
+  //   // Add playlist to Users playlist array 
+  //   DocumentReference userDoc = FirebaseFirestore.instance.collection('Users').doc(ownerId);
+  //   userDoc.update({'playlists': FieldValue.arrayUnion([{"id": playlistDoc.id, "name": name}])});
+  //   setState(() {
+  //     playlistsInfo.add(PlaylistInfo(id: playlistDoc.id, name: name));
+  //   });
+
+  // }
+
+  // void fetchSongData(String songId) async {
+  //   DocumentSnapshot song = await FirebaseFirestore.instance.collection("Songs").doc(songId).get();
+  //   print(song.data());
+  //   // Start some action play song etc.....
+
+  //   // return song.data();
+  // }
 
 
 
@@ -105,7 +122,7 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
                                   onTap: (() {
                                     // Play song
                                     print("play ${playlist.songsInfo[index].name}");
-                                    fetchSongData(playlist.songsInfo[index].id);
+                                    // fetchSongData(playlist.songsInfo[index].id);
 
                                   }),
                                   child: Icon(Icons.play_circle)
@@ -130,4 +147,25 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
     
     );
   }
+
+  // Future openTextField(context) => showDialog(
+  //   context: context, 
+  //   builder: (context) => AlertDialog(
+  //     title: Text("Playlist Name"),
+  //     content: TextField(
+  //       autofocus: true,
+  //       decoration: InputDecoration(hintText: "Enter the new playlist's name"),
+  //       controller: controller,
+  //     ),
+  //     actions: [
+  //       TextButton(
+  //         onPressed: () {
+  //           createNewPlaylist(name: controller.text, ownerId: FirebaseAuth.instance.currentUser!.uid);
+  //           Navigator.of(context).pop();
+  //         }, 
+  //         child: Text("Create")
+  //       )
+  //     ],
+  //   )
+  // );
 }
