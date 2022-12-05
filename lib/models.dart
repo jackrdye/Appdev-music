@@ -48,6 +48,12 @@ class Friend {
   factory Friend.fromJson(dynamic json) {
     return Friend(id: json['id'] as String, name: json['name'] as String);
   }
+  Map<String, dynamic> toJson() => {
+    'id': id, //do not include id in document as it is already the unique identifier 
+    'name': name,
+  };
+
+  
 }
 
 class Song {

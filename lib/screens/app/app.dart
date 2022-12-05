@@ -73,13 +73,13 @@ class _AppState extends State<App> {
     //   playlistDoc.set(element.toJson());
     // }
 
-    profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [Friend(id: "hi", name: "Dhruv")], friendRequests: [], playlists: [], sharedWithMe: []);
+    profile = Profile(id: userAuth.uid, email: userAuth.email!, username: userAuth.email!, musicService: "appleMusic", friends: [], friendRequests: [], playlists: [], sharedWithMe: []);
     // userDoc.set(profile.toJson());
     // print(profile.playlists);
     _bottomNavPages = [
       // HomePage(user: userAuth, signOut: signOut),
       LibraryPage(playlistsInfo: profile.playlists),
-      FriendsPage(friends: profile.friends,),
+      FriendsPage(friends: profile.friends, friendRequests: profile.friendRequests),
       ProfilePage(profile: profile,),
       ProfilePage(profile: profile,)
       // PlaylistListItem(name: "songname")
@@ -92,7 +92,7 @@ class _AppState extends State<App> {
     _bottomNavPages = [
       // HomePage(user: userAuth, signOut: signOut),
       LibraryPage(playlistsInfo: profile.playlists),
-      FriendsPage(friends: List<Friend>.from(profile.friends.map((friend) => Friend.fromJson(friend))) ),
+      FriendsPage(friends: profile.friends, friendRequests: profile.friendRequests),
       ProfilePage(profile: profile,),
       ProfilePage(profile: profile,)
     ];
@@ -194,36 +194,7 @@ class _AppState extends State<App> {
   }
 
 
-  // Friend Methods
-  void sendFriendFriendRequest({required String userId, required String recipientId}) async {
-    // Check recipient is not already a friend
-    DocumentReference userDoc = FirebaseFirestore.instance.collection("Users").doc(userId);
-    DocumentReference recipientDoc = FirebaseFirestore.instance.collection("Users").doc(recipientId);
-    DocumentSnapshot profile = await userDoc.get(); // User profile 
-    
-    if (profile["friends"].contains(recipientId)) {
-      print("They are already your friend");
-    } else {
-      recipientDoc.update({"friendRequestIds": FieldValue.arrayUnion([recipientId])});
-    }
-  }
-  void acceptFriendRequest({required String userId, required String friendId}) async {
-    // accept from friend requests list
-    DocumentReference userDoc = FirebaseFirestore.instance.collection("Users").doc(userId);
-    DocumentReference friendDoc = FirebaseFirestore.instance.collection("Users").doc(friendId);
-
-    userDoc.update({"friends": FieldValue.arrayUnion([friendId])});
-    friendDoc.update({"friends": FieldValue.arrayUnion([userId])});
-  }
-  void removeFriend({required String user1Id, required String user2Id}) async {
-    // Remove 'friend' from both Users
-    // Add permission for another user to update friends array of another user if they are contained in it 
-    DocumentReference user1Doc = FirebaseFirestore.instance.collection("Users").doc(user1Id);
-    DocumentReference user2Doc = FirebaseFirestore.instance.collection("Users").doc(user2Id); 
-
-    user1Doc.update({"friends": FieldValue.arrayRemove([user2Id])}); // remove user2's Id from User 1's document
-    user2Doc.update({"friends": FieldValue.arrayRemove([user1Id])}); // remove user1's Id from User 2's document
-  }
+  
 
 
   // Song Methods
@@ -243,15 +214,15 @@ class _AppState extends State<App> {
         var userDoc = snapshot.data!.data()!;
         print(userDoc);
         // loadPlaylists(List<String>.from(userDoc['playlists'] as List));
-        print(userDoc["friends"]);
-        for (var friend in userDoc["friends"]) {
-          print(friend);
-          print(friend["id"].runtimeType);
-        }
-        for (var playlist in userDoc["playlists"]) {
-          print(playlist);
-          print(playlist["id"].runtimeType);
-        }
+        // print(userDoc["friends"]);
+        // for (var friend in userDoc["friends"]) {
+        //   print(friend);
+        //   print(friend["id"].runtimeType);
+        // }
+        // for (var playlist in userDoc["playlists"]) {
+        //   print(playlist);
+        //   print(playlist["id"].runtimeType);
+        // }
 
         profile = Profile(
           id: userAuth.uid, 
