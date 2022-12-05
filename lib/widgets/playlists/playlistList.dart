@@ -8,7 +8,8 @@ import 'package:music_app/widgets/playlists/playlistListItem.dart';
 
 class PlaylistList extends StatelessWidget {
   List<PlaylistInfo> playlistsInfo;
-  PlaylistList({super.key, required this.playlistsInfo});
+  List<Friend> friends;
+  PlaylistList({super.key, required this.playlistsInfo, required this.friends});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class PlaylistList extends StatelessWidget {
         itemCount: playlistsInfo.length,
         padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
         itemBuilder: ((context, index) {
-          return PlaylistListItem(playlistInfo: playlistsInfo[index]);
+          return PlaylistListItem(playlistInfo: playlistsInfo[index], friends: this.friends,);
         })
       ),
     );

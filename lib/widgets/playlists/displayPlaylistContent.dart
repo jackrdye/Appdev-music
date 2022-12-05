@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,8 +11,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DisplayPlaylistContent extends StatefulWidget {
   PlaylistInfo playlistInfo;
+  List<Friend> friends;
 
-  DisplayPlaylistContent({super.key, required this.playlistInfo});
+  DisplayPlaylistContent({super.key, required this.playlistInfo, required this.friends});
 
   @override
   State<DisplayPlaylistContent> createState() => _DisplayPlaylistContentState();
@@ -23,14 +22,19 @@ class DisplayPlaylistContent extends StatefulWidget {
 class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
   
   late PlaylistInfo playlistInfo;
+  late List<Friend> friends;
   late TextEditingController controller;
   SpotifyService spotify = SpotifyService();
+  late Playlist playlist;
+  late String _selectedFriendValue;
 
   @override
   void initState() {
     super.initState();
     playlistInfo = widget.playlistInfo;
+    friends = widget.friends;
     // print(playlistInfo.id);
+    _selectedFriendValue = friends[0].id;
     controller = TextEditingController();
   }
   @override
@@ -76,6 +80,46 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
   // }
 
 
+  void addCollaborator({required String newCollaboratorId, required String playlistId}) async {
+    DocumentReference playlistDoc = FirebaseFirestore.instance.collection("Playlists").doc(playlistId);
+    playlistDoc.update({"collaboratorIds": FieldValue.arrayUnion([newCollaboratorId])});
+
+    DocumentReference newCollaboratorDoc = FirebaseFirestore.instance.collection("Users").doc(newCollaboratorId);
+    newCollaboratorDoc.update({"playlists": FieldValue.arrayUnion([{"id": playlistId, "name": playlistInfo.name}])});
+  }
+
+  Future openAddCollaborator(context) => showDialog(
+    context: context, 
+    builder: (context) => AlertDialog(
+      title: Text("Add Collaborator"),
+      content: DropdownButtonFormField(
+        items: friends.map((friend) => DropdownMenuItem(
+            child: Text(friend.name), 
+            value: friend.id
+          )).toList(), 
+        value: _selectedFriendValue,
+        onChanged: (friendId) {
+          if (friendId is String) {
+            setState(() {
+              _selectedFriendValue = friendId;
+            });
+          }
+        }
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            // Send friend request 
+            addCollaborator(newCollaboratorId: _selectedFriendValue, playlistId: playlistInfo.id);
+            Navigator.of(context).pop();
+          }, 
+          child: Text("Confirm")
+        )
+      ],
+    )
+  );
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +130,14 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
           return Text("Something went wrong");
         }
         if (!snapshot.hasData) {
-          return Text("Loading");
+          return CircularProgressIndicator();
+
         } else {
           if(!snapshot.data!.exists) {
             return Text("Doesn't Exist");
           }
           var playlistDoc = snapshot.data!.data()!;
-          Playlist playlist = Playlist(
+          playlist = Playlist(
             id: playlistInfo.id, 
             name: playlistDoc['name'], 
             ownerId: playlistDoc['ownerId'], 
@@ -133,10 +178,7 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
                               InkWell(
                                 onTap: () {
                                   print("add collaborator");
-                                  // Enable editing
-                                  // Add
-
-                                  // Delete
+                                  openAddCollaborator(context);
                                 },
                                 child: Icon(Icons.add_reaction_rounded , size: 28,),
                               )

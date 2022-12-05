@@ -8,7 +8,8 @@ import 'dart:math' as math;
 
 class PlaylistListItem extends StatelessWidget {
   PlaylistInfo playlistInfo;
-  PlaylistListItem({super.key, required this.playlistInfo});
+  List<Friend> friends;
+  PlaylistListItem({super.key, required this.playlistInfo, required this.friends});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class PlaylistListItem extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DisplayPlaylistContent(playlistInfo: playlistInfo,)),
+              MaterialPageRoute(builder: (context) => DisplayPlaylistContent(playlistInfo: playlistInfo, friends: friends)),
             );
           },
           

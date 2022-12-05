@@ -48,12 +48,12 @@ class _FriendsPageState extends State<FriendsPage> {
       DocumentReference recipientDoc = FirebaseFirestore.instance.collection("Users").doc(recipientId);
       DocumentSnapshot profile = await userDoc.get(); // User profile 
 
-      if (profile["friends"].contains(recipientId)) {
-        print("They are already your friend");
-      } else {
+      // if (profile["friends"].filter((friend) => friend["id"] == recipientId).length > 0) {
+      //   print("They are already your friend");
+      // } else {
         print("Sending request");
-        recipientDoc.update({"friendRequestIds": FieldValue.arrayUnion([userId])});
-      }
+        recipientDoc.update({"friendRequests": FieldValue.arrayUnion([{"id": userId, "name": profile["username"]}])});
+      // }
     }
   }
 

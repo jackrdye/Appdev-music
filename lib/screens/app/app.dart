@@ -79,7 +79,7 @@ class _AppState extends State<App> {
     // print(profile.playlists);
     _bottomNavPages = [
       // HomePage(user: userAuth, signOut: signOut),
-      LibraryPage(playlistsInfo: profile.playlists),
+      LibraryPage(playlistsInfo: profile.playlists, friends: profile.friends,),
       FriendsPage(friends: profile.friends, friendRequests: profile.friendRequests),
       ProfilePage(profile: profile,),
       ProfilePage(profile: profile,)
@@ -92,7 +92,7 @@ class _AppState extends State<App> {
   void updateBottomNavPages() {
     _bottomNavPages = [
       // HomePage(user: userAuth, signOut: signOut),
-      LibraryPage(playlistsInfo: profile.playlists),
+      LibraryPage(playlistsInfo: profile.playlists, friends: profile.friends,),
       FriendsPage(friends: profile.friends, friendRequests: profile.friendRequests),
       ProfilePage(profile: profile,),
       ProfilePage(profile: profile,)

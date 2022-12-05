@@ -7,7 +7,8 @@ import 'package:music_app/widgets/playlists/playlistList.dart';
 
 class LibraryPage extends StatefulWidget {
   List<PlaylistInfo> playlistsInfo;
-  LibraryPage({super.key, required this.playlistsInfo});
+  List<Friend> friends;
+  LibraryPage({super.key, required this.playlistsInfo, required this.friends});
 
   @override
   State<LibraryPage> createState() => _LibraryPageState();
@@ -17,10 +18,12 @@ class _LibraryPageState extends State<LibraryPage> {
   late TextEditingController controller;
 
   late List<PlaylistInfo> playlistsInfo;
+  late List<Friend> friends;
   @override
   void initState() {
     super.initState();
     playlistsInfo = widget.playlistsInfo;
+    friends = widget.friends;
     controller = TextEditingController();
   }
   @override
@@ -50,6 +53,7 @@ class _LibraryPageState extends State<LibraryPage> {
       playlistsInfo.add(PlaylistInfo(id: playlistDoc.id, name: name));
     });
   }
+
 
   
 
@@ -82,7 +86,7 @@ class _LibraryPageState extends State<LibraryPage> {
             ),
           ),
           Expanded(
-            child: PlaylistList(playlistsInfo: playlistsInfo)
+            child: PlaylistList(playlistsInfo: playlistsInfo, friends: friends,)
           ),
         ],
       ),
