@@ -92,7 +92,7 @@ class _AppState extends State<App> {
     _bottomNavPages = [
       // HomePage(user: userAuth, signOut: signOut),
       LibraryPage(playlistsInfo: profile.playlists),
-      FriendsPage(friends: profile.friends,),
+      FriendsPage(friends: List<Friend>.from(profile.friends.map((friend) => Friend.fromJson(friend))) ),
       ProfilePage(profile: profile,),
       ProfilePage(profile: profile,)
     ];

@@ -5,10 +5,24 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:music_app/models.dart';
 import 'package:music_app/widgets/friends/friendsList.dart';
 
-
-class FriendsPage extends StatelessWidget {
+class FriendsPage extends StatefulWidget {
   List<Friend> friends;
   FriendsPage({super.key, required this.friends});
+
+  @override
+  State<FriendsPage> createState() => _FriendsPageState();
+}
+
+class _FriendsPageState extends State<FriendsPage> {
+  
+  late TextEditingController _friendNameController;
+  late List<Friend> friends;
+  @override
+  void initState() {
+    super.initState();
+    friends = widget.friends;
+    _friendNameController = TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +39,14 @@ class FriendsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Friends", style: TextStyle(fontSize: 24),),
-                // InkWell(
-                //   onTap: () {
-                //     print("edit");
-                //     // Enable editing
-                //     // Add
-                //     // Delete
-                //   },
-                //   child: Icon(Icons.edit)
-                // )
+                InkWell(
+                  onTap: () {
+                    print("Add friend");
+                    openFriendRequest(context);
+                    
+                  },
+                  child: Icon(Icons.add)
+                )
               ],
             ),
           ),
@@ -44,4 +57,26 @@ class FriendsPage extends StatelessWidget {
       ),
     );
   }
+
+  Future openFriendRequest(context) => showDialog(
+    context: context, 
+    builder: (context) => AlertDialog(
+      title: Text("Send Friend Request"),
+      content: TextField(
+        autofocus: true,
+        decoration: InputDecoration(hintText: "Enter the friends username or email"),
+        controller: _friendNameController,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            // Send friend request 
+
+            Navigator.of(context).pop();
+          }, 
+          child: Text("Send")
+        )
+      ],
+    )
+  );
 }
