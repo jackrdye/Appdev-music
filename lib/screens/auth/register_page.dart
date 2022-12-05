@@ -34,7 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
         id: uid, 
         email: email, 
         username: email, 
-        musicService: 'Spotify', 
+        musicService: 'Spotify',
         friends: [], 
         friendRequests: [],
         playlists: [], 

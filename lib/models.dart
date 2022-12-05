@@ -6,7 +6,7 @@ class Playlist {
   String id;
   String name;
   String ownerId;
-  List<SongInfo> songsInfo;
+  List<Song> songsInfo;
   List<String> collaboratorIds;
 
   Playlist({required this.id, required this.name, required this.ownerId, required this.songsInfo, required this.collaboratorIds});
@@ -22,7 +22,7 @@ class Playlist {
     // 'id': id, do not include id in document as it is already the unique identifier 
     'name': name,
     'ownerId': ownerId,
-    'songsInfo': songsInfo.map((song) => {'id': song.id, 'name': song.name, 'imgLink': song.imgLink}).toList(), // convert Song models to just each song id for database
+    'songsInfo': songsInfo.map((song) => {'id': song.id, 'name': song.name, 'artist': song.artist, 'imageLink': song.imageLink}).toList(), // convert Song models to just each song id for database
     'collaboratorIds': collaboratorIds,
   };
   
@@ -56,27 +56,42 @@ class Song {
   String artist;
   String imageLink;
   String spotifyLink;
-  String appleMusicLink;
-  String youtubeMusicLink;
+  // String appleMusicLink;
+  // String youtubeMusicLink;
 
   // Song({required this.id, required this.name, this.spotifyLink="", this.appleMusicLink="", this.youtubeMusicLink=""});
 
   Map<String, dynamic> toJson() => {
-    'name': name, 
+    'id': id,
+    'name': name,
+    'artist': artist,
+    'imageLink': imageLink,
     'spotifyLink': spotifyLink, 
-    'appleMusicLink': appleMusicLink, 
-    'youtubeMusicLink': youtubeMusicLink, 
+    // 'appleMusicLink': appleMusicLink,
+    // 'youtubeMusicLink': youtubeMusicLink,
     
   };
-  Song({required this.id, required this.name, this.artist="", this.imageLink="", this.spotifyLink="", this.appleMusicLink="", this.youtubeMusicLink=""});
+  // Song({required this.id, required this.name, this.artist="", this.imageLink="", this.spotifyLink="", this.appleMusicLink="", this.youtubeMusicLink=""});
+  Song({required this.id, required this.name, this.artist="", this.imageLink="", this.spotifyLink=""});
 
-  factory Song.fromJSON(Map<String, dynamic> json) {
+  factory Song.fromScrapedJSON(Map<String, dynamic> json, String songID) {
     return Song(
-      id: "1",
+      id: songID,
       name: json['name'],
       spotifyLink: json['external_urls']['spotify'],
       artist: json['artists'][0]['name'],
       imageLink: json['album']['images'][0]['url'],
+    );
+  }
+
+  factory Song.fromJSON(dynamic json) {
+    print(json['spotifyLink']);
+    return Song(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      spotifyLink: json['spotifyLink'] !=null? json['spotifyLink'] as String : "",
+      artist: json['artist'] !=null? json['artist'] as String : "",
+      imageLink: json['imageLink'] !=null? json['imageLink'] as String : "",
     );
   }
 }
@@ -104,44 +119,44 @@ class Profile {
     'sharedWithMe': sharedWithMe,
   };
 
-  Future spotifyAccess() async {
-    String clientID = 'd8f3a9af98514ded9e50c366ed7a50db';
-    String clientSecret = '36922a8ab95b47f8aac8659cd7190b64';
-    String auth_url = 'https://accounts.spotify.com/api/token';
-
-    dynamic response = await http.post(
-      Uri.parse(auth_url),
-      body: <String, String> {
-        'grant_type': 'client_credentials',
-        'client_id': clientID,
-        'client_secret': clientSecret,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      dynamic result = json.decode(response.body);
-      final token = result['access_token'];
-      Map<String, String> headers = {
-        'Authorization': 'Bearer $token',
-      };
-      return headers;
-    }
-    return null;
-  }
-
-  Future fetchSong(String content) async {
-    dynamic headers = spotifyAccess();
-    String base_url = 'https://api.spotify.com/v1/';
-    String search_url = base_url + 'search?query='+content+"&type=track&limit=1&market=HK";
-    dynamic data = await http.get(
-        Uri.parse(search_url),
-        headers: headers,
-    );
-    data = json.decode(data.body);
-    dynamic song_data = data['tracks']['items'][0];
-    Song newSong = Song.fromJSON(song_data);
-    return newSong;
-  }
+  // Future spotifyAccess() async {
+  //   String clientID = 'd8f3a9af98514ded9e50c366ed7a50db';
+  //   String clientSecret = '36922a8ab95b47f8aac8659cd7190b64';
+  //   String auth_url = 'https://accounts.spotify.com/api/token';
+  //
+  //   dynamic response = await http.post(
+  //     Uri.parse(auth_url),
+  //     body: <String, String> {
+  //       'grant_type': 'client_credentials',
+  //       'client_id': clientID,
+  //       'client_secret': clientSecret,
+  //     },
+  //   );
+  //
+  //   if (response.statusCode == 200) {
+  //     dynamic result = json.decode(response.body);
+  //     final token = result['access_token'];
+  //     Map<String, String> headers = {
+  //       'Authorization': 'Bearer $token',
+  //     };
+  //     return headers;
+  //   }
+  //   return null;
+  // }
+  //
+  // Future fetchSong(String content) async {
+  //   dynamic headers = spotifyAccess();
+  //   String base_url = 'https://api.spotify.com/v1/';
+  //   String search_url = base_url + 'search?query='+content+"&type=track&limit=1&market=HK";
+  //   dynamic data = await http.get(
+  //       Uri.parse(search_url),
+  //       headers: headers,
+  //   );
+  //   data = json.decode(data.body);
+  //   dynamic song_data = data['tracks']['items'][0];
+  //   Song newSong = Song.fromJSON(song_data);
+  //   return newSong;
+  // }
 
 }
 class PlaylistInfo {
