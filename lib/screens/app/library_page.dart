@@ -76,7 +76,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     // Add
                     // Delete
                   },
-                  child: Icon(Icons.add)
+                  child: Icon(Icons.add_circle_rounded, size: 28,)
                 )
               ],
             ),

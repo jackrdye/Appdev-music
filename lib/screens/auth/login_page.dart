@@ -44,17 +44,24 @@ class _LoginPageState extends State<LoginPage> {
           
           
                 // Welcome
-                Text(
-                  "Hello Again!",
-                  style: GoogleFonts.bebasNeue(
-                      fontSize: 36,
-                    ),
+                Container(
+                  margin: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 5)
                   ),
+                  child: Text(
+                    "SYNC",
+                    style: GoogleFonts.bebasNeue(
+                        fontSize: 36,
+                      ),
+                    ),
+                ),
                 const SizedBox(
                   height: 5,
                 ),
                 const Text(
-                  "Welcome back you've been missed!"
+                  "Welcome back to Sync, you've been missed!"
                 ),
                 const SizedBox(
                   height: 75,
