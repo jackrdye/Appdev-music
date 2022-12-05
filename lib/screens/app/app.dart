@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:music_app/screens/app/friends_page.dart';
 import 'package:music_app/screens/app/home_page.dart';
@@ -269,13 +270,56 @@ class _AppState extends State<App> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text("Sync"),
-            actions: [IconButton(onPressed: (){
-              setState(() {
-                _selectedIndex = 2;
-              });
-            }, icon: Icon(Icons.person, size: 28))],
-          ),
+              toolbarHeight: 100,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${profile.username != null ? profile.username : profile.email}\'s Sync',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Text(
+                          'Email: ${profile.email}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ]
+                    ),
+                  ),
+                  Container(
+                    // margin: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 5)
+                    ),
+                    child: Text(
+                      "SYNC",
+                      style: GoogleFonts.bebasNeue(
+                        fontSize: 25,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // title: Text('Sync'),
+              // title: Text("Sync"),
+              // actions: [IconButton(onPressed: (){
+              //   setState(() {
+              //     _selectedIndex = 2;
+              //   });
+              // }, icon: Icon(Icons.person, size: 28))],
+            ),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
               color: Colors.grey[200],
