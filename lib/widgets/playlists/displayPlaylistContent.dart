@@ -30,7 +30,7 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
   void initState() {
     super.initState();
     playlistInfo = widget.playlistInfo;
-    print(playlistInfo.id);
+    // print(playlistInfo.id);
     controller = TextEditingController();
   }
   @override
@@ -39,9 +39,6 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
     super.dispose();
   }
 
-  void getPlaylistSongs() async {
-
-  }
 
   void addSongToPlaylist({required dynamic data, required String playlistId}) async {
 
@@ -69,12 +66,6 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
   //   });
 
   // }
-  
-  Future<Song> fetchSongByID(String songId) async {
-    DocumentSnapshot song = await FirebaseFirestore.instance.collection("Songs").doc(songId).get();
-    Song newSong = Song.fromJSON(song.data());
-    return newSong;
-  }
 
   // void fetchSongData(String songId) async {
   //   DocumentSnapshot song = await FirebaseFirestore.instance.collection("Songs").doc(songId).get();
@@ -91,10 +82,6 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection("Playlists").doc(playlistInfo.id).snapshots(),
       builder: ((context, snapshot) {
-        // print(playlistInfo.id);
-        // print(snapshot.hasData);
-        // print(snapshot.connectionState);
-        // print(snapshot.data);
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
@@ -104,12 +91,7 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
           if(!snapshot.data!.exists) {
             return Text("Doesn't Exist");
           }
-          // final playlist = snapshot.data;
-          // print(snapshot.data);
-          // print(snapshot.data?.data());
           var playlistDoc = snapshot.data!.data()!;
-          print('playlistDoc');
-          print(playlistDoc);
           Playlist playlist = Playlist(
             id: playlistInfo.id, 
             name: playlistDoc['name'], 
@@ -126,7 +108,7 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width, 
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                       decoration: BoxDecoration(
                         color: Colors.grey[300]
                       ),
@@ -134,27 +116,70 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(playlist.name, style: TextStyle(fontSize: 24),),
-                          InkWell(
-                              onTap: () {
-                                print("add");
-                                openTextField(context);
-                                // Enable editing
-                                // Add
+                          Row(
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    print("add");
+                                    openTextField(context);
+                                    // Enable editing
+                                    // Add
 
-                                // Delete
-                              },
-                              child: Icon(Icons.add)
+                                    // Delete
+                                  },
+                                  child: Icon(Icons.add_circle_rounded, size: 28,)
+                              ),
+                              SizedBox(width: 20,),
+                              InkWell(
+                                onTap: () {
+                                  print("add collaborator");
+                                  // Enable editing
+                                  // Add
+
+                                  // Delete
+                                },
+                                child: Icon(Icons.add_reaction_rounded , size: 28,),
+                              )
+                            ]
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            height: 30,
+                            width: 130,
+                            decoration: BoxDecoration(
+                                color: Colors.blue.shade200,
+                                borderRadius: BorderRadius.circular(20)
+                            ),
+                            child: Center(
+                              child: Text(
+                                  '${playlist.songsInfo.length} Songs',
+                                  style: TextStyle(fontSize: 14)),
+                            ),
                           ),
-                          // InkWell(
-                          //   onTap: () {
-                          //     print("edit");
-                          //     // Enable editing
-                          //     // Add
-                          //
-                          //     // Delete
-                          //   },
-                          //   child: Icon(Icons.edit)
-                          // )
+                          Container(
+                            height: 30,
+                            width: 130,
+                            decoration: BoxDecoration(
+                                color: Colors.blue.shade200,
+                                borderRadius: BorderRadius.circular(20)
+                            ),
+                            child: Center(
+                              child: Text(
+                                  '${playlist.collaboratorIds.length} Collaborators',
+                                  style: TextStyle(fontSize: 14)),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -232,6 +257,7 @@ class _DisplayPlaylistContentState extends State<DisplayPlaylistContent> {
       ],
     )
   );
+
 
   // Future openTextField(context) => showDialog(
   //   context: context, 

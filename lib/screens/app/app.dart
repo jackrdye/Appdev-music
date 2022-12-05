@@ -274,7 +274,7 @@ class _AppState extends State<App> {
               setState(() {
                 _selectedIndex = 2;
               });
-            }, icon: Icon(Icons.person))],
+            }, icon: Icon(Icons.person, size: 28))],
           ),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
@@ -291,6 +291,7 @@ class _AppState extends State<App> {
                   tabActiveBorder: Border.all(color: Colors.black, width: 1),
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                   gap: 5,
+                  iconSize: 26,
                   tabs: const [
                     GButton(
                       icon: Icons.library_music_outlined, 

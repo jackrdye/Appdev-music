@@ -64,7 +64,7 @@ class PlaylistListItem extends StatelessWidget {
             ),
           ),
         ),
-        Divider(color: Colors.grey[400],)
+        Divider(height: 15, thickness: 1, color: Colors.grey[400],)
       ],
     );
     // Center(
