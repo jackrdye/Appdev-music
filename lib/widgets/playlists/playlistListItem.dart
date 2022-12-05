@@ -51,15 +51,16 @@ class PlaylistListItem extends StatelessWidget {
             title: Text(playlistInfo.name, style: TextStyle(fontSize: 20),),
             trailing: Container(
               height: 30,
-              width: 130,
+              width: 50,
               decoration: BoxDecoration(
                 color: Colors.blue.shade200,
                 borderRadius: BorderRadius.circular(20)
               ),
               child: Center(
-                child: Text(
-                    '3 collaborators',
-                    style: TextStyle(fontSize: 14)),
+                child: Icon(
+                  Icons.shuffle_rounded,
+                  size: 24,
+                ),
               ),
             ),
           ),
